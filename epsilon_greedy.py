@@ -25,11 +25,10 @@ class EpsGreedy(MAB):
         self.estimate_value = np.full(narms, Q0)
 
     def play(self, tround, context=None):
-        if tround == 0 or np.random.random() < self.epsilon:
+        if np.random.random() < self.epsilon:
             arm = np.random.choice(self.narms)
         else:
-            arm_list = np.argwhere(self.estimate_value == np.amax(self.estimate_value))
-            arm_list = [item for sublist in arm_list for item in sublist]  # make the nested list into a flat list
+            arm_list = np.argwhere(self.estimate_value == np.amax(self.estimate_value)).flatten()
             arm = np.random.choice(arm_list)
         return arm
 

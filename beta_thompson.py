@@ -29,8 +29,7 @@ class BetaThompson(MAB):
         theta = []
         for i in range(self.narms):
             theta.append(np.random.beta(self.alpha[i], self.beta[i]))
-        arm_list = np.argwhere(theta == np.amax(theta))
-        arm_list = [item for sublist in arm_list for item in sublist]  # make the nested list into a flat list
+        arm_list = np.argwhere(theta == np.amax(theta)).flatten()
         arm = np.random.choice(arm_list)
         return arm
 

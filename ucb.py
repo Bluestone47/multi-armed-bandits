@@ -28,11 +28,7 @@ class UCB(MAB):
 
     def play(self, tround, context=None):
         self.tround = tround
-        # if tround == 0 or np.random.random() < (1 - tround**4):
-        #     arm = np.random.choice(self.narms)
-        # else:
-        arm_list = np.argwhere(self.upper_bounds == np.amax(self.upper_bounds))
-        arm_list = [item for sublist in arm_list for item in sublist]  # make the nested list into a flat list
+        arm_list = np.argwhere(self.upper_bounds == np.amax(self.upper_bounds)).flatten()
         arm = np.random.choice(arm_list)
         return arm
 
@@ -43,5 +39,5 @@ class UCB(MAB):
         else:
             u = (reward + self.estimate_value[arm] * (self.action_attempts[arm] - 1)) / self.action_attempts[arm]
         self.estimate_value[arm] = u
-        boost = self.rho * np.log(self.tround + 1) / self.action_attempts[arm]
+        boost = self.rho * np.log(self.tround) / self.action_attempts[arm]
         self.upper_bounds[arm] = self.estimate_value[arm] + np.sqrt(boost)
