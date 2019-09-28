@@ -43,15 +43,16 @@ def offlineEvaluate(mab, arms, rewards, contexts, nrounds=None):
             count += 1
             if count >= len(arms):
                 return payoff
-            if count < len(arms) and arms[count] == arm:
+            if count < len(arms) and arms[count] - 1 == arm:
                 # print('###')
                 # print(t)
                 # print(count)
                 # print(arm)
                 break
-        mab.update(arms[count], rewards[count], contexts[count])
-        history.append(arms[count])
+        mab.update(arm, rewards[count], contexts[count])  # arm (0-9), arms (1-10)
+        history.append(arm)
         payoff.append(rewards[count])
+    return payoff
 
 
 if __name__ == '__main__':
