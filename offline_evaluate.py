@@ -56,6 +56,7 @@ def offlineEvaluate(mab, arms, rewards, contexts, nrounds=None):
     # print(mab.beta)
     print(mab.action_attempts)
     print(mab.estimate_value)
+    print(mab.upper_bounds)
     return out
 
 
@@ -73,14 +74,14 @@ if __name__ == '__main__':
         contexts.append(event[2:])
     dataset_file.close()
 
-    mab = EpsGreedy(10, 0.05)
-    results_EpsGreedy = offlineEvaluate(mab, arms, rewards, contexts, 800)
-    print('EpsGreedy average reward', np.mean(results_EpsGreedy))
+    # mab = EpsGreedy(10, 0.05)
+    # results_EpsGreedy = offlineEvaluate(mab, arms, rewards, contexts, 800)
+    # print('EpsGreedy average reward', np.mean(results_EpsGreedy))
 
     mab = UCB(10, 1.0)
     results_UCB = offlineEvaluate(mab, arms, rewards, contexts, 800)
     print('UCB average reward', np.mean(results_UCB))
 
-    mab = BetaThompson(10, 1.0, 1.0)
-    results_BetaThompson = offlineEvaluate(mab, arms, rewards, contexts, 800)
-    print('BetaThompson average reward', np.mean(results_BetaThompson))
+    # mab = BetaThompson(10, 1.0, 1.0)
+    # results_BetaThompson = offlineEvaluate(mab, arms, rewards, contexts, 800)
+    # print('BetaThompson average reward', np.mean(results_BetaThompson))
