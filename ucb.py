@@ -22,12 +22,13 @@ class UCB(MAB):
         self.narms = narms
         self.rho = rho
         self.tround = 0
+        self.max_upper_bound = 0
         self.action_attempts = np.zeros(narms)
         self.estimate_value = np.full(narms, Q0)
 
     def play(self, tround, context=None):
-        self.tround = tround + 1  # tround should start from 1, in case log(0) is invalid
-        if tround == 0 or np.random.random() < (1 / tround**4):
+        self.tround = tround
+        if tround == 0 or np.random.random() < 0.05:
             arm = np.random.choice(self.narms)
         else:
             arm_list = np.argwhere(self.estimate_value == np.amax(self.estimate_value))
@@ -41,6 +42,6 @@ class UCB(MAB):
             u = reward
         else:
             u = (reward + self.estimate_value[arm] * (self.action_attempts[arm] - 1)) / self.action_attempts[arm]
-        asd = self.rho * np.log(self.tround) / self.action_attempts[arm]
-        q = u + np.sqrt(asd)
+        delta = self.rho * np.log(self.tround + 1) / self.action_attempts[arm]
+        q = u + np.sqrt(delta)
         self.estimate_value[arm] = q

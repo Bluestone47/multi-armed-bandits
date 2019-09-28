@@ -44,15 +44,18 @@ def offlineEvaluate(mab, arms, rewards, contexts, nrounds=None):
             if count >= len(arms):
                 return out  # reach the end of the logged dataset
             if count < len(arms) and arms[count] - 1 == arm:
-                print('###')
-                print(t)
-                print(count)
-                print(arm)
+                # print('###')
+                # print(t)
+                # print(count)
+                # print(arm)
                 break
         mab.update(arm, rewards[count], contexts[count])  # arm (0-9), arms (1-10)
         history.append(arm)
         out.append(rewards[count])
-    print(count)
+    print(mab.alpha)
+    print(mab.beta)
+    print(mab.action_attempts)
+    print(mab.estimate_value)
     return out
 
 
@@ -73,12 +76,11 @@ if __name__ == '__main__':
     # mab = EpsGreedy(10, 0.05)
     # results_EpsGreedy = offlineEvaluate(mab, arms, rewards, contexts, 800)
     # print('EpsGreedy average reward', np.mean(results_EpsGreedy))
+    #
+    # mab = UCB(10, 1.0)
+    # results_UCB = offlineEvaluate(mab, arms, rewards, contexts, 800)
+    # print('UCB average reward', np.mean(results_UCB))
 
-    mab = UCB(10, 1.0)
-    results_UCB = offlineEvaluate(mab, arms, rewards, contexts, 800)
-    print(len(results_UCB))
-    print('UCB average reward', np.mean(results_UCB))
-
-    # mab = BetaThompson(10, 1.0, 1.0)
-    # results_BetaThompson = offlineEvaluate(mab, arms, rewards, contexts, 800)
-    # print('BetaThompson average reward', np.mean(results_BetaThompson))
+    mab = BetaThompson(10, 1.0, 1.0)
+    results_BetaThompson = offlineEvaluate(mab, arms, rewards, contexts, 800)
+    print('BetaThompson average reward', np.mean(results_BetaThompson))
