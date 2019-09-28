@@ -1,6 +1,7 @@
 import numpy as np
 from numpy.linalg import inv
 import matplotlib.pyplot as plt
+
 from epsilon_greedy import EpsGreedy
 from ucb import UCB
 from beta_thompson import BetaThompson
@@ -35,12 +36,22 @@ def offlineEvaluate(mab, arms, rewards, contexts, nrounds=None):
 
     history = []  # history of arms
     payoff = []  # history of payoffs
+    count = 0  # count of events
     for t in range(nrounds):
-        arm = mab.play(t)
-        mab.update(arm, rewards[t], contexts[t])
-        history.append(arm)
-        out = mab.estimate_value
-    return out
+        while True:
+            arm = mab.play(t)
+            count += 1
+            if count >= len(arms):
+                return payoff
+            if count < len(arms) and arms[count] == arm:
+                # print('###')
+                # print(t)
+                # print(count)
+                # print(arm)
+                break
+        mab.update(arms[count], rewards[count], contexts[count])
+        history.append(arms[count])
+        payoff.append(rewards[count])
 
 
 if __name__ == '__main__':
@@ -50,10 +61,11 @@ if __name__ == '__main__':
     contexts = []
     dataset_file = open('dataset.txt', 'r')
     for line in dataset_file:
-        event = line.split(' ')
+        event = line.split(' ')[:-1]
+        event = list(map(int, event))
         arms.append(event[0])
-    rewards.append(event[1])
-    contexts.append(event[2:-1])
+        rewards.append(event[1])
+        contexts.append(event[2:])
     dataset_file.close()
 
     mab = EpsGreedy(10, 0.05)

@@ -29,7 +29,7 @@ class BetaThompson(MAB):
         theta = []
         for i in range(self.narms):
             theta[i] = np.random.beta(self.alpha[i], self.beta[i])
-        arm_list = np.argwhere(theta == np.argmax(theta))
+        arm_list = np.argwhere(theta == np.amax(theta))
         arm = np.random.choice(arm_list)
         return arm
 

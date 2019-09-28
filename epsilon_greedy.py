@@ -1,6 +1,7 @@
 import numpy as np
 from mab import MAB
 
+
 class EpsGreedy(MAB):
     """
     Epsilon-Greedy multi-armed bandit
@@ -27,14 +28,17 @@ class EpsGreedy(MAB):
         if tround == 0 or np.random.random() < self.epsilon:
             arm = np.random.choice(self.narms)
         else:
-            # estimate_value_max = np.where(np.isinf(self.estimate_value), -np.inf, self.estimate_value).argmax()
             arm_list = np.argwhere(self.estimate_value == np.amax(self.estimate_value))
+            arm_list = [item for sublist in arm_list for item in sublist]  # make the nested list into a flat list
             arm = np.random.choice(arm_list)
         return arm
 
     def update(self, arm, reward, context=None):
         self.action_attempts[arm] += 1
-        q = (reward + self.estimate_value[arm] * (self.action_attempts[arm] - 1)) / self.action_attempts[arm]
+        if np.isinf(self.estimate_value[arm]):
+            q = reward
+        else:
+            q = (reward + self.estimate_value[arm] * (self.action_attempts[arm] - 1)) / self.action_attempts[arm]
         self.estimate_value[arm] = q
 
 
