@@ -26,17 +26,21 @@ class UCB(MAB):
         self.estimate_value = np.full(narms, Q0)
 
     def play(self, tround, context=None):
-        self.tround = tround
+        self.tround = tround + 1  # tround should start from 1, in case log(0) is invalid
         if tround == 0 or np.random.random() < (1 / tround**4):
             arm = np.random.choice(self.narms)
         else:
-            # estimate_value_max = np.where(np.isinf(self.estimate_value), -np.inf, self.estimate_value).argmax()
             arm_list = np.argwhere(self.estimate_value == np.amax(self.estimate_value))
+            arm_list = [item for sublist in arm_list for item in sublist]  # make the nested list into a flat list
             arm = np.random.choice(arm_list)
         return arm
 
     def update(self, arm, reward, context=None):
         self.action_attempts[arm] += 1
-        u = (reward + self.estimate_value[arm] * (self.action_attempts[arm] - 1)) / self.action_attempts[arm]
-        q = u + np.sqrt(self.rho * np.log(self.tround) / self.action_attempts[arm])
+        if np.isinf(self.estimate_value[arm]):
+            u = reward
+        else:
+            u = (reward + self.estimate_value[arm] * (self.action_attempts[arm] - 1)) / self.action_attempts[arm]
+        asd = self.rho * np.log(self.tround) / self.action_attempts[arm]
+        q = u + np.sqrt(asd)
         self.estimate_value[arm] = q
