@@ -23,12 +23,12 @@ class BetaThompson(MAB):
         self.alpha = np.full(narms, alpha0)
         self.beta = np.full(narms, beta0)
         self.action_attempts = np.zeros(narms)
-        self.estimate_value = np.full(narms, 1)
+        self.estimate_value = np.zeros(narms)
 
     def play(self, tround, context=None):
         theta = []
         for i in range(self.narms):
-            theta[i] = np.random.beta(self.alpha[i], self.beta[i])
+            theta.append(np.random.beta(self.alpha[i], self.beta[i]))
         arm_list = np.argwhere(theta == np.amax(theta))
         arm_list = [item for sublist in arm_list for item in sublist]  # make the nested list into a flat list
         arm = np.random.choice(arm_list)
@@ -36,8 +36,8 @@ class BetaThompson(MAB):
 
     def update(self, arm, reward, context=None):
         self.action_attempts[arm] += 1
-        if reward > 0:
+        if reward == 1:
             self.alpha[arm] += 1
         else:
             self.beta[arm] += 1
-        self.estimate_value[arm] += self.alpha[arm] / self.action_attempts[arm]
+        self.estimate_value[arm] = (self.alpha[arm] - 1) / self.action_attempts[arm]
