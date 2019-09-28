@@ -40,6 +40,3 @@ class EpsGreedy(MAB):
         else:
             q = (reward + self.estimate_value[arm] * (self.action_attempts[arm] - 1)) / self.action_attempts[arm]
         self.estimate_value[arm] = q
-
-
-
