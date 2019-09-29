@@ -1,10 +1,11 @@
 import numpy as np
-from numpy.linalg import inv
 import matplotlib.pyplot as plt
 
 from epsilon_greedy import EpsGreedy
 from ucb import UCB
 from beta_thompson import BetaThompson
+from linucb import LinUCB
+from lin_thompson import LinThompson
 
 
 def offlineEvaluate(mab, arms, rewards, contexts, nrounds=None):
@@ -39,11 +40,12 @@ def offlineEvaluate(mab, arms, rewards, contexts, nrounds=None):
     count = 0  # count of events
     for t in range(nrounds):
         while True:
-            arm = mab.play(len(history) + 1)
+            arm = mab.play(len(history) + 1, contexts[count])
             count += 1
             if count >= len(arms):
                 return out  # reach the end of the logged dataset
             if count < len(arms) and arms[count] - 1 == arm:
+                count -= 1
                 # print('###')
                 # print(t)
                 # print(count)
@@ -85,3 +87,11 @@ if __name__ == '__main__':
     mab = BetaThompson(10, 1.0, 1.0)
     results_BetaThompson = offlineEvaluate(mab, arms, rewards, contexts, 800)
     print('BetaThompson average reward', np.mean(results_BetaThompson))
+
+    # mab = LinUCB(10, 10, 1.0)
+    # results_LinUCB = offlineEvaluate(mab, arms, rewards, contexts, 800)
+    # print('LinUCB average reward', np.mean(results_LinUCB))
+
+    # mab = LinThompson(10, 10, 1.0)
+    # results_LinThompson = offlineEvaluate(mab, arms, rewards, contexts, 800)
+    # print('LinThompson average reward', np.mean(results_LinThompson))
