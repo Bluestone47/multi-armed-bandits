@@ -81,25 +81,25 @@ if __name__ == '__main__':
         contexts.append(event[2:])
     dataset_file.close()
 
-    mab = EpsGreedy(10, 0.05)
-    results_EpsGreedy = offlineEvaluate(mab, arms, rewards, contexts, 800)
-    print('EpsGreedy average reward', np.mean(results_EpsGreedy))
+    # mab = EpsGreedy(10, 0.05)
+    # results_EpsGreedy = offlineEvaluate(mab, arms, rewards, contexts, 800)
+    # print('EpsGreedy average reward', np.mean(results_EpsGreedy))
+    #
+    # mab = UCB(10, 1.0)
+    # results_UCB = offlineEvaluate(mab, arms, rewards, contexts, 800)
+    # print('UCB average reward', np.mean(results_UCB))
+    #
+    # mab = BetaThompson(10, 1.0, 1.0)
+    # results_BetaThompson = offlineEvaluate(mab, arms, rewards, contexts, 800)
+    # print('BetaThompson average reward', np.mean(results_BetaThompson))
+    #
+    # mab = LinUCB(10, 10, 1.0)
+    # results_LinUCB = offlineEvaluate(mab, arms, rewards, contexts, 800)
+    # print('LinUCB average reward', np.mean(results_LinUCB))
 
-    mab = UCB(10, 1.0)
-    results_UCB = offlineEvaluate(mab, arms, rewards, contexts, 800)
-    print('UCB average reward', np.mean(results_UCB))
-
-    mab = BetaThompson(10, 1.0, 1.0)
-    results_BetaThompson = offlineEvaluate(mab, arms, rewards, contexts, 800)
-    print('BetaThompson average reward', np.mean(results_BetaThompson))
-
-    mab = LinUCB(10, 10, 1.0)
-    results_LinUCB = offlineEvaluate(mab, arms, rewards, contexts, 800)
-    print('LinUCB average reward', np.mean(results_LinUCB))
-
-    # mab = LinThompson(10, 10, 1.0)
-    # results_LinThompson = offlineEvaluate(mab, arms, rewards, contexts, 800)
-    # print('LinThompson average reward', np.mean(results_LinThompson))
+    mab = LinThompson(10, 10, 1.0)
+    results_LinThompson = offlineEvaluate(mab, arms, rewards, contexts, 800)
+    print('LinThompson average reward', np.mean(results_LinThompson))
 
     plt.xlabel('Iterations')
     plt.ylabel('Cross-entropy Loss (Train)')
