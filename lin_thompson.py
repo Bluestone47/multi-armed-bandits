@@ -23,9 +23,6 @@ class LinThompson(MAB):
         self.narms = narms
         self.ndims = ndims
         self.v = v
-        # self.inverse_covariance = []  # ndims * ndims
-        # self.former_contexts = []  # ndims * 1
-        # self.mu_hat = []
         self.inverse_covariance = np.identity(self.ndims)  # ndims * ndims
         self.mu_hat = np.zeros(self.ndims)  # ndims * 1
         self.former_contexts = np.zeros(self.ndims)  # ndims * 1
@@ -34,11 +31,6 @@ class LinThompson(MAB):
         self.estimate_value = np.full(narms, 0.0)
 
     def play(self, tround, context):
-        # for arm in range(self.narms):
-        #     content_arm = np.transpose(context[arm])
-        #     if self.action_attempts[arm] == 0:
-        #         self.inverse_covariance.append(np.identity(self.ndims))
-        #         self.former_contexts.append(np.zeros((self.ndims, 1)))
         covariance = self.v**2 * inv(self.inverse_covariance)
         mu = np.random.multivariate_normal(self.mu_hat, covariance)
         context = np.reshape(context, (self.narms, self.ndims))
