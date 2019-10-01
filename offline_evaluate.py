@@ -44,24 +44,15 @@ def offlineEvaluate(mab, arms, rewards, contexts, nrounds=None):
             if count >= len(arms):
                 return out  # reach the end of the logged dataset
             if count < len(arms) and arms[count] - 1 == arm:
-                # print(count)
-                # print('###')
-                # print(t)
-                # print(count)
-                # print(arm)
                 break
             count += 1
         mab.update(arm, rewards[count], contexts[count])  # arm (0-9), arms (1-10)
-        # print(str(count) + ' ' + str(arm) + ' ' + str(rewards[count]) + ' ' + str(contexts[count]))
         history.append(arm)
         out.append(rewards[count])
         count += 1
-    # print(mab.alpha)
-    # print(mab.beta)
     # print(mab.total_rewards)
     print(mab.action_attempts)
     print(mab.estimate_value)
-    # print(mab.upper_bounds)
     cum_mean = np.cumsum(out) / np.arange(1, len(out) + 1)
     plt.plot(cum_mean, label=mab.__class__.__name__)
     return out
