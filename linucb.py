@@ -23,8 +23,8 @@ class LinUCB(MAB):
         self.narms = narms
         self.ndims = ndims
         self.alpha = alpha
-        self.inverse_covariance = np.empty(narms, dtype=object)  # ndims * ndims
-        self.former_contexts = np.empty(narms, dtype=object)  # ndims * 1
+        self.inverse_covariance = []  # ndims * ndims
+        self.former_contexts = []  # ndims * 1
         self.upper_bounds = np.zeros(ndims)  # 1 * ndims
         self.total_rewards = np.zeros(narms)
         self.action_attempts = np.zeros(narms)
@@ -35,13 +35,13 @@ class LinUCB(MAB):
         for arm in range(self.narms):
             content_arm = np.transpose(context[arm])
             if self.action_attempts[arm] == 0:
-                self.inverse_covariance[arm] = np.identity(self.ndims)
-                self.former_contexts[arm] = np.zeros((self.ndims, 1))
+                self.inverse_covariance.append(np.identity(self.ndims))
+                self.former_contexts.append(np.zeros(self.ndims))
             theta_hat = inv(self.inverse_covariance[arm]) @ self.former_contexts[arm]  # narms * 1
             np.seterr(divide='ignore')
             std_dev = np.log(np.transpose(content_arm) @ inv(self.inverse_covariance[arm]) @ content_arm)  # ndims * ndims
             np.seterr(divide='warn')
-            predicted_payoff = np.dot(np.transpose(theta_hat), content_arm)[0]
+            predicted_payoff = np.dot(np.transpose(theta_hat), content_arm)
             self.upper_bounds[arm] = predicted_payoff + self.alpha * std_dev
         arm_list = np.argwhere(self.upper_bounds == np.amax(self.upper_bounds)).flatten()
         arm = np.random.choice(arm_list)
@@ -54,4 +54,4 @@ class LinUCB(MAB):
         self.total_rewards[arm] += reward
         self.estimate_value[arm] = self.total_rewards[arm] / self.action_attempts[arm]
         self.inverse_covariance[arm] += np.dot(content_arm, np.transpose(content_arm))
-        self.former_contexts[arm] = self.former_contexts[arm] + reward * np.transpose(content_arm)
+        self.former_contexts[arm] = self.former_contexts[arm] + reward * content_arm
