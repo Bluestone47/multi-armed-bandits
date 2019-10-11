@@ -92,7 +92,7 @@ if __name__ == '__main__':
     results_LinThompson = offlineEvaluate(mab, arms, rewards, contexts, 800)
     print('LinThompson average reward', np.mean(results_LinThompson))
 
-    plt.xlabel('Iterations')
-    plt.ylabel('Cross-entropy Loss (Train)')
+    plt.xlabel('Rounds')
+    plt.ylabel('Mean Cumulative Reward')
     plt.legend()
     plt.show()
