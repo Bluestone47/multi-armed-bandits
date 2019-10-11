@@ -23,15 +23,15 @@ class LinUCB(MAB):
         self.narms = narms
         self.ndims = ndims
         self.alpha = alpha
-        self.inverse_covariance = []  # ndims * ndims
-        self.former_contexts = []  # ndims * 1
+        self.inverse_covariance = []
+        self.former_contexts = []
         self.upper_bounds = np.zeros(ndims)  # 1 * ndims
         self.total_rewards = np.zeros(narms)
         self.action_attempts = np.zeros(narms)
         self.estimate_value = np.full(narms, 0.0)
         for arm in range(self.narms):
-            self.inverse_covariance.append(np.identity(self.ndims))
-            self.former_contexts.append(np.zeros(self.ndims))
+            self.inverse_covariance.append(np.identity(self.ndims))  # ndims * ndims
+            self.former_contexts.append(np.zeros(self.ndims))  # ndims * 1
 
     def play(self, tround, context):
         context = np.reshape(context, (self.narms, self.ndims))
@@ -42,7 +42,7 @@ class LinUCB(MAB):
             variance = np.transpose(content_arm) @ inv(self.inverse_covariance[arm]) @ content_arm
             std_dev = np.log(variance)  # ndims * ndims
             np.seterr(divide='warn')
-            predicted_payoff = np.dot(np.transpose(theta_hat.reshape(self.ndims, 1)), content_arm)
+            predicted_payoff = np.dot(np.transpose(theta_hat), content_arm)
             self.upper_bounds[arm] = predicted_payoff + self.alpha * std_dev
         arm_list = np.argwhere(self.upper_bounds == np.amax(self.upper_bounds)).flatten()
         arm = np.random.choice(arm_list)
