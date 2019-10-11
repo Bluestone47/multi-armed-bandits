@@ -41,10 +41,10 @@ class LinThompson(MAB):
 
     def update(self, arm, reward, context):
         context = np.reshape(context, (self.narms, self.ndims))
-        content_arm = np.transpose(context[arm])
+        content_arm = np.transpose(context[arm].reshape(1, self.ndims))
         self.action_attempts[arm] += 1
         self.total_rewards[arm] += reward
         self.estimate_value[arm] = self.total_rewards[arm] / self.action_attempts[arm]
         self.inverse_covariance += np.dot(content_arm, np.transpose(content_arm))
-        self.former_contexts = self.former_contexts + reward * content_arm
+        self.former_contexts = self.former_contexts + reward * content_arm.reshape(self.ndims)
         self.mu_hat = inv(self.inverse_covariance) @ self.former_contexts
